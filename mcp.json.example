@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "memvid": {
+      "command": "memvid-mcp",
+      "env": {
+        "MEMVID_PROJECT_DATA_DIR": ".memvid_data",
+        "MEMVID_USER_DATA_DIR": "~/memvid_data"
+      }
+    }
+  }
+}
