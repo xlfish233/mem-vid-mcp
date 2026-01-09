@@ -10,6 +10,7 @@ import numpy as np
 
 from .memory import MemvidMemory
 from .scope_classifier import ScopeClassifier
+from .runtime import ensure_ffmpeg
 
 
 def detect_project_root(start_path: str | None = None) -> Path | None:
@@ -72,6 +73,7 @@ class DualMemoryManager:
         Args:
             project_root: Explicit project root (auto-detected if None)
         """
+        ensure_ffmpeg()
         # Detect project root
         start_path = project_root or os.environ.get("MEMVID_PROJECT_ROOT")
         self.project_root = detect_project_root(start_path)

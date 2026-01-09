@@ -15,19 +15,117 @@
 - **Waypoint 关联图** - 记忆之间的语义关联
 - **记忆衰减** - 基于时间和使用频率的自然遗忘
 
+## 前提：安装 uv
+
+下文的 `uv` / `uvx` 方式依赖 `uv`，请先安装：
+
+```bash
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+```powershell
+# Windows (PowerShell)
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+安装后可用以下命令验证：
+
+```bash
+uv --version
+```
+
+如仅使用 `pip`，可跳过本节并直接看“安装”。
+
+## 轻量运行（保留 memvid 核心）
+
+如果系统未安装 `ffmpeg`，可以使用运行时依赖自动下载并配置（无需系统包管理器）：
+
+```bash
+# 使用 uv
+uv pip install "memvid-mcp[runtime]"
+
+# 或使用 pip
+pip install "memvid-mcp[runtime]"
+```
+
+说明：运行时依赖可能会在首次启动时下载 ffmpeg 等组件，第一次启动可能较慢。
+
+在无 GUI 的 Linux 环境如遇到 `libGL` / `libglib` 相关错误，可尝试使用 headless 版本（会覆盖 `cv2` 绑定）：
+
+```bash
+# 使用 uv
+uv pip install "memvid-mcp[headless]"
+
+# 或使用 pip
+pip install "memvid-mcp[headless]"
+```
+
+如果仍报错，可在安装后强制重装 headless 版本：
+
+```bash
+pip install --force-reinstall opencv-python-headless opencv-contrib-python-headless
+```
+
+## 快速开始
+
+### 方式一：直接从 Git 运行（推荐试用）
+
+适合不想本地安装、只想快速接入 MCP 的场景。
+
+```bash
+# 直接从 Git 仓库运行（无需安装到环境）
+uvx --from git+https://github.com/xlfish233/mem-vid-mcp@v0.1.0 memvid-mcp
+```
+
+提示：`uvx` 方式默认不包含可选依赖；如需自动下载 ffmpeg 或 headless 版本，请按上文使用 extras 安装后再运行。
+
+对应的 Claude MCP 配置示例（`~/.claude.json`）：
+
+```json
+{
+  "mcpServers": {
+    "memvid": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/xlfish233/mem-vid-mcp@v0.1.0",
+        "memvid-mcp"
+      ],
+      "env": {
+        "MEMVID_PROJECT_DATA_DIR": ".memvid_data",
+        "MEMVID_USER_DATA_DIR": "~/memvid_data"
+      }
+    }
+  }
+}
+```
+
+### 方式二：本地安装后运行
+
+适合需要本地开发或长期使用的场景。
+
 ## 安装
 
 ```bash
 # 使用 uv
 uv pip install -e .
 
+# 从 Git 安装（可选）
+uv pip install git+https://github.com/xlfish233/mem-vid-mcp@v0.1.0
+
 # 或使用 pip
 pip install -e .
+
+# 从 Git 安装（可选）
+pip install git+https://github.com/xlfish233/mem-vid-mcp@v0.1.0
 ```
 
 ## 使用
 
 ### 作为 MCP 服务器
+
+`memvid-mcp` 是基于 stdio 的 MCP 服务器，建议通过 MCP 客户端启动。
 
 添加到 Claude Code 配置 (`~/.claude.json`):
 

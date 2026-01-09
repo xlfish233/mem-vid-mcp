@@ -12,6 +12,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff"]
+runtime = ["imageio-ffmpeg"]
+headless = ["opencv-python-headless", "opencv-contrib-python-headless"]
 
 [project.scripts]
 memvid-mcp = "memvid_mcp.server:main"
